@@ -47,7 +47,7 @@ DB_NAME=wallet_db
 SERVER_PORT=8080
 
 ### 📊 API Endpoints
-Метод	Путь	Описание
+
 POST	/api/v1/wallets	Изменить баланс кошелька
 GET	/api/v1/wallets/{walletId}	Получить баланс
 
