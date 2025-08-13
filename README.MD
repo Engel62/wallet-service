@@ -21,18 +21,18 @@
 
  Создайте БД
 
-psql -U postgres -c "CREATE DATABASE wallet_db;"
+```psql -U postgres -c "CREATE DATABASE wallet_db;"```
 
 
 Запустите приложение
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```mvn spring-boot:run -Dspring-boot.run.profiles=dev```
 ### 2.  Запуск через Docker
 
 Соберите и запустите
-docker-compose up --build
+```docker-compose up --build```
 
 Остановить и удалить контейнеры
-docker-compose down
+```docker-compose down```
 
 ### 3. Переменные окружения
 Создайте файл .env в корне проекта:
@@ -65,10 +65,10 @@ POST /api/v1/wallets
 ### 🧪 Тестирование
 
 # Unit-тесты
-mvn test
+```mvn test```
 
 # Интеграционные тесты (с Testcontainers)
-mvn verify -Pintegration-tests
+```mvn verify -Pintegration-tests```
 ### 🛠 Настройки
 Основные параметры можно изменить в:
 
@@ -88,8 +88,8 @@ src/main/resources/db/changelog/ - миграции БД
 Пул соединений (HikariCP)
 
 ### 📦  Сборка
-mvn clean package
-#Создаст jar-файл в target/wallet-service-0.0.1.jar
+```mvn clean package```
+
 ### 🌟 Особенности
 Полностью контейнеризированное решение
 
