@@ -19,14 +19,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class WalletService {
     private final WalletRepository walletRepository;
-
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE, timeout = 5)
     public WalletResponse processOperation(WalletRequest request) {
         Wallet wallet = walletRepository.findById(request.getWalletId())
                 .orElseThrow(() -> new WalletNotFoundException(request.getWalletId()));
 
-        if (request.getOperationType() == OperationType.WITHDRAW
-                && wallet.getBalance().compareTo(request.getAmount()) < 0) {
+        if (request.getOperationType() == OperationType.WITHDRAW &&
+                wallet.getBalance().compareTo(request.getAmount()) < 0) {
             throw new InsufficientFundsException(request.getWalletId());
         }
 
@@ -35,9 +34,9 @@ public class WalletService {
                 : wallet.getBalance().subtract(request.getAmount());
 
         wallet.setBalance(newBalance);
-        walletRepository.save(wallet);
+        wallet = walletRepository.save(wallet);
 
-        return new WalletResponse(wallet.getId(), newBalance);
+        return new WalletResponse(wallet.getId(), wallet.getBalance());
     }
     public Wallet getWalletById(UUID walletId) {
         return walletRepository.findById(walletId)

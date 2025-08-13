@@ -1,28 +1,40 @@
 version: '3.8'
-services:
-  wallet-service:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      wallet-db:
-        condition: service_healthy
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://wallet-db:5432/wallet
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 161092
-      SPRING_LIQUIBASE_ENABLED: true
 
+services:
   wallet-db:
     image: postgres:13-alpine
+    container_name: wallet-postgres
+    env_file: .env  # Используем переменные из .env файла
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 161092
-      POSTGRES_DB: wallet
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
+    volumes:
+      - wallet-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  wallet-service:
+    build: .
+    container_name: wallet-app
+    env_file: .env  # Подключаем тот же .env файл
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://wallet-db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_LIQUIBASE_ENABLED=true
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      wallet-db:
+        condition: service_healthy
+
+volumes:
+  wallet-data:
