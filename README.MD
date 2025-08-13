@@ -48,20 +48,20 @@ SERVER_PORT=8080
 
 ### 📊 API Endpoints
 
-POST	
+-POST	
 /api/v1/wallets	Изменить баланс кошелька
-GET
+-GET
 /api/v1/wallets/{walletId}	Получить баланс
 
 ### Пример запроса:
 
 json
-POST /api/v1/wallets
-{
-  "walletId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "operationType": "DEPOSIT",
-  "amount": 1000
-}
+-POST /api/v1/wallets
+-{
+ - "walletId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  -"operationType": "DEPOSIT",
+  -"amount": 1000
+-}
 ### 🧪 Тестирование
 
 # Unit-тесты
